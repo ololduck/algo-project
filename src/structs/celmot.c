@@ -5,23 +5,31 @@
 
 Celmot* celmot_new(char* mot) {
     Celmot* m = malloc(sizeof(Celmot));
-    if(m)
+    if(m) {
         m->mot = mot;
+        m->positions = NULL;
     return m;
 }
 
-void celmot_add(Celmot* l, Celmot* elem) {
-    Celmot* prec = l;
-    while(l) {
-        /* utiliser strcmp */
-        if(strcmp(l->mot, elem->mot) > -1 && strcmp(elem->mot, prec->mot) < 1) {
-            /* effectuer la liaison avec le reste de la chaine. */
-            prec->suivant = elem;
-            elem->suivant = l;
-            return;
-        }
-        prec = l;
-        l = l->suivant;
+void celmot_add_position(Celmot* l, int position) {
+    Listepos pos = l->positions;
+    if(pos == NULL) {
+        pos = listepos_new(position);
+        return;
     }
+
+    while(pos->suivant != NULL){
+        pos = pos->suivant;
+    }
+    pos->suivant = listepos_new(position);
 }
 
+void celmot_print(Celmot* l) {
+    printf("celmot { addresse: %x, mot: %s, positions: ", l, l->mot);
+    Listepos pos = l->positions;
+    while(pos){
+        printf("%d, ", pos->position);
+        pos = pos->suivant;
+    }
+    printf("}\n");
+}

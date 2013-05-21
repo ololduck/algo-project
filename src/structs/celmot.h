@@ -10,6 +10,7 @@ typedef struct celmot
 } Celmot;
 
 Celmot* celmot_new(char* mot);
-void celmot_add(Celmot* l, Celmot* elem);
+void celmot_add_position(Celmot* l, int position);
+void celmot_print(Celmot* l);
 
 #endif

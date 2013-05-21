@@ -9,6 +9,9 @@ typedef struct cellule {
 } Cellule, *Liste;
 
 Liste liste_new();
-void liste_add(Liste l, Liste elem);
+void liste_add(Liste *l, Liste elem);
+int liste_add_alphabetical(Liste* l, Celmot* elem);
+
+void liste_print(Liste l);
 
 #endif
