@@ -8,7 +8,7 @@ OUT=$(OUTDIR)$(OUTBIN)
 RM=rm
 
 SRCD=src/
-SRC=$(SRCD)celmot.c $(SRCD)celpos.c $(SRCD)cellule.c
+SRC=$(SRCD)structs/celmot.c $(SRCD)structs/celpos.c $(SRCD)structs/cellule.c $(SRCD)hachage.c $(SRCD)parsing.c
 
 all: release
 

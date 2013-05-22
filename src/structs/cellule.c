@@ -17,8 +17,9 @@ void liste_add(Liste *l, Liste elem) {
         (*l)->valeur = elem;
         return ;
     }
-    while(*l)
+    while(*l){
         *l = (*l)->suivant;
+    }
     (*l)->suivant = elem;
 }
 

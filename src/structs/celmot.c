@@ -1,6 +1,7 @@
 #include "celmot.h"
 
 #include <stdlib.h>
+#include <stdio.h>
 #include <string.h>
 
 Celmot* celmot_new(char* mot) {
@@ -8,6 +9,7 @@ Celmot* celmot_new(char* mot) {
     if(m) {
         m->mot = mot;
         m->positions = NULL;
+    }
     return m;
 }
 
@@ -27,7 +29,7 @@ void celmot_add_position(Celmot* l, int position) {
 void celmot_print(Celmot* l) {
     printf("celmot { addresse: %x, mot: %s, positions: ", l, l->mot);
     Listepos pos = l->positions;
-    while(pos){
+    while(pos) {
         printf("%d, ", pos->position);
         pos = pos->suivant;
     }

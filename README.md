@@ -18,7 +18,9 @@ cp Index ~/bin/
 
 ## Documentation
 
-To write
+After [Installation](#Installation), you may run it by invoking `Index`
+
+TODO: Write user manual.
 
 ## Contribute
 
