@@ -18,9 +18,8 @@ release: $(SRC)
 debug: $(SRC)
 	$(CC) $(CCOPTS) -o $(OUT) -g $(SRCD)main.c $(SRC)
 
-tests:
-	$(CC) $(CCOPTS) -o $(OUTDIR)tests -g $(SRCD)tests.c $(SRC)
-	./tests
+tests: $(SRC)
+	for f in `ls tests`; do $(CC) $(CCOPTS) -o $(OUTDIR)tests/$$f -g tests/$$f $(SRC) && ./$(OUTDIR)tests/$$f; done
 
 clean: $(OUT)
 	@$(RM) $(OUT)

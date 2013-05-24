@@ -16,7 +16,7 @@ Celmot* celmot_new(char* mot) {
 void celmot_add_position(Celmot* l, int position) {
     Listepos pos = l->positions;
     if(pos == NULL) {
-        pos = listepos_new(position);
+        l->positions = listepos_new(position);
         return;
     }
 

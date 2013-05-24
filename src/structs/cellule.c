@@ -14,18 +14,21 @@ Liste liste_new() {
 }
 
 void liste_add(Liste *l, Liste elem) {
-    if(*l == NULL) {
+    if(*l == NULL || *l == 0) {
         *l = liste_new();
         (*l)->suivant = elem;
         return ;
     }
-    while(*l){
+    while((*l)->suivant){
         *l = (*l)->suivant;
     }
     (*l)->suivant = elem;
 }
 
 int liste_add_alphabetical(Liste* l, Celmot* elem) {
+    /* TODO:
+     *  If the next element is the same word, add a position instead.
+     */
     Liste e = *l;
     if(elem == NULL)
         return 0;

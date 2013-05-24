@@ -15,17 +15,19 @@ int parse_file(Cellule* tab, long size_of_tab, char* fname, Liste* alphabetical_
     unsigned char line[SENTENCE_BUFFER_LEN];
     unsigned short line_index;
     unsigned char c;
-    while(!feof(f)){
-        line_index = 0;
-        sentence_offset = global_index;
-        while(!feof(f) && (c = tolower(fgetc(f)))) {
-            global_index++;
-            if(c == '.' || c == '!' || c == '?'){
-                parse_sentence(tab, size_of_tab, line, line_index + 1, sentence_offset, alphabetical_word_list);
-                /* reset current line */
-            }
-            line[line_index++] = c;
+    line_index = 0;
+    sentence_offset = global_index;
+    while(!feof(f) && (c = tolower(fgetc(f)))) {
+        global_index++;
+        if(c == '.' || c == '!' || c == '?'){
+            parse_sentence(tab, size_of_tab, line, line_index + 1, sentence_offset, alphabetical_word_list);
+            /* reset current line */
+            for(line_index = 0; line_index < SENTENCE_BUFFER_LEN; ++line_index)
+                line[line_index] = 0;
+            line_index = 0;
+            sentence_offset = global_index + 1;
         }
+        line[line_index++] = c;
     }
     fclose(f);
     return 1;
@@ -40,19 +42,28 @@ int parse_sentence(Cellule* tab,
     /* Here we have a problem, since we have to count also the word index. So i will rewrite this func */
     unsigned char* mot = calloc(sentence_len, sizeof(unsigned char));
     unsigned short i = 0;
+    unsigned short mot_index = 0;
     while(sentence[i] != '\0') {
-        if(sentence[i] == ' ' || sentence[i] == ',' || sentence[i] == ';'){
+        if(sentence[i] == ' ' || sentence[i] == ',' || sentence[i] == ';' || sentence[i] == '\n'){
             /* the we have to add the current word to the list, and cleanup the current word*/
-            add_word(tab, size_of_tab, mot, i + 1, sentence_pos, alphabetical_word_list);
-            int tmp = 0;
-            for(; tmp<sentence_len; tmp++)
-                mot[tmp] = 0;
+            if(strcmp(mot, "") != 0 && strcmp(mot, " ")) {
+                add_word(tab, size_of_tab, mot, i + 1, sentence_pos, alphabetical_word_list);
+                mot_index = 0;
+                for(; mot_index<sentence_len; mot_index++)
+                    mot[mot_index] = 0;
+                mot_index = 0;
+            }
+            else
+                i++;
         }
-        mot[i] = sentence[i];
-        i++;
+        else {
+            mot[mot_index++] = sentence[i++];
+        }
     }
     return 1;
 }
+
+/* TODO: Add a check of the present words, and add as a position if word already present. */
 
 int add_word(Cellule* tab, long size_of_tab, unsigned char* word, unsigned short word_len, unsigned long sentence_pos, Liste* alphabetical_word_list) {
     char* word_to_add = malloc(sizeof(char) * (word_len));
