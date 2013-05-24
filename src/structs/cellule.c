@@ -1,6 +1,8 @@
 #include "cellule.h"
 
 #include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
 
 Liste liste_new() {
     Liste l = malloc(sizeof(Cellule));
@@ -14,7 +16,7 @@ Liste liste_new() {
 void liste_add(Liste *l, Liste elem) {
     if(*l == NULL) {
         *l = liste_new();
-        (*l)->valeur = elem;
+        (*l)->suivant = elem;
         return ;
     }
     while(*l){
@@ -59,7 +61,7 @@ void liste_print(Liste l) {
     printf("Liste: {\n");
     while(l) {
         printf("\t");
-        printf("{\n\t\taddress: %x,\n\t\tvaleur: {\n", l);
+        printf("{\n\t\taddress: %x,\n\t\tvaleur: {\n", (unsigned int) l);
         printf("\t\t\t");
         celmot_print(l->valeur);
         printf("\t\t}\n\t},\n");

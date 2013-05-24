@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
 
 #include "parsing.h"
 #include "hachage.h"
@@ -9,7 +10,7 @@
 
 
 int parse_file(Cellule* tab, long size_of_tab, char* fname, Liste* alphabetical_word_list) {
-    FILE* f = fopen(fname, 'r');
+    FILE* f = fopen(fname, "r");
     unsigned long global_index = 0, sentence_offset = 0;
     unsigned char line[SENTENCE_BUFFER_LEN];
     unsigned short line_index;
@@ -36,6 +37,7 @@ int parse_sentence(Cellule* tab,
     unsigned short sentence_len,
     unsigned long sentence_pos,
     Liste* alphabetical_word_list) {
+    /* Here we have a problem, since we have to count also the word index. So i will rewrite this func */
     unsigned char* mot = calloc(sentence_len, sizeof(unsigned char));
     unsigned short i = 0;
     while(sentence[i] != '\0') {
@@ -46,7 +48,8 @@ int parse_sentence(Cellule* tab,
             for(; tmp<sentence_len; tmp++)
                 mot[tmp] = 0;
         }
-        mot[i] = sentence[i++];
+        mot[i] = sentence[i];
+        i++;
     }
     return 1;
 }
@@ -60,6 +63,7 @@ int add_word(Cellule* tab, long size_of_tab, unsigned char* word, unsigned short
     Liste to_add = liste_new();
     to_add->valeur = elem;
     celmot_add_position(elem, sentence_pos);
+    liste_add(&l, to_add);
     liste_add_alphabetical(alphabetical_word_list, elem);
     return 1;
 }
