@@ -27,7 +27,8 @@ int parse_file(Cellule* tab, long size_of_tab, char* fname, Liste* alphabetical_
             line_index = 0;
             sentence_offset = global_index + 1;
         }
-        line[line_index++] = c;
+        else
+            line[line_index++] = c;
     }
     fclose(f);
     return 1;
@@ -46,7 +47,7 @@ int parse_sentence(Cellule* tab,
     while(sentence[i] != '\0') {
         if(sentence[i] == ' ' || sentence[i] == ',' || sentence[i] == ';' || sentence[i] == '\n'){
             /* the we have to add the current word to the list, and cleanup the current word*/
-            if(strcmp((const char*) mot, "") != 0 && strcmp((const char*) mot, " ")) {
+            if(strcmp((const char*) mot, "") != 0 && strcmp((const char*) mot, " ") !=  0 && strcmp((const char*) mot, ".") != 0) {
                 add_word(tab, size_of_tab, mot, i + 1, sentence_pos, alphabetical_word_list);
                 mot_index = 0;
                 for(; mot_index<sentence_len; mot_index++)
@@ -66,26 +67,31 @@ int parse_sentence(Cellule* tab,
 /* TODO: Add a check of the present words, and add as a position if word already present. */
 
 int add_word(Cellule* tab, long size_of_tab, unsigned char* word, unsigned short word_len, unsigned long sentence_pos, Liste* alphabetical_word_list) {
-    int hash = hache((char*)word);
+    int hash = hache((char*) word);
     Liste l = &tab[hash % size_of_tab]; /* we get the address of the row we have to write to */
     /* we have to add it at the end of the cell list. */
-    int found_word = 0;
-    while(l->suivant != NULL) {
-        l = l->suivant;
-        if(strcmp((const char*)l->valeur->mot, (const char*) word) == 0) {
+
+    do {
+        if(l->valeur != NULL  && strcmp((const char*)l->valeur->mot, (const char*) word) == 0) {
             celmot_add_position(l->valeur, sentence_pos);
-            found_word = 1;
+            return 1;
         }
-    }
-    if(!found_word) {
-        char* word_to_add = malloc(sizeof(char) * (word_len));
-        strcpy(word_to_add, word);
-        Celmot* elem = celmot_new(word_to_add);
-        Liste to_add = liste_new();
-        to_add->valeur = elem;
-        celmot_add_position(elem, sentence_pos);
+        if(l->suivant == NULL)
+            break;
+        l = l->suivant;
+    } while(l->suivant != NULL);
+    Liste to_add;
+    if(l->valeur == NULL)
+        to_add = l;
+    else
+        to_add = liste_new();
+    char* word_to_add = malloc(sizeof(char) * (word_len));
+    strcpy(word_to_add, word);
+    Celmot* elem = celmot_new(word_to_add);
+    to_add->valeur = elem;
+    celmot_add_position(elem, sentence_pos);
+    if(l != to_add)
         liste_add(&l, to_add);
-        liste_add_alphabetical(alphabetical_word_list, elem);
-    }
+    liste_add_alphabetical(alphabetical_word_list, elem);
     return 1;
 }

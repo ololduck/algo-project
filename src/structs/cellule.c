@@ -26,9 +26,6 @@ void liste_add(Liste *l, Liste elem) {
 }
 
 int liste_add_alphabetical(Liste* l, Celmot* elem) {
-    /* TODO:
-     *  If the next element is the same word, add a position instead.
-     */
     Liste e = *l;
     if(elem == NULL)
         return 0;
