@@ -27,6 +27,9 @@ void celmot_add_position(Celmot* l, int position) {
 }
 
 void celmot_print(Celmot* l) {
+    if(l == NULL || l->mot == NULL) {
+        return;
+    }
     printf("celmot { addresse: %x, mot: %s, positions: ", (unsigned int)l, l->mot);
     Listepos pos = l->positions;
     while(pos) {

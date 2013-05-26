@@ -6,6 +6,7 @@ Listepos listepos_new(int pos) {
     Listepos p = malloc(sizeof(Celpos));
     if(p) {
         p->position = pos;
+        p->suivant = NULL;
     }
     return p;
 }
