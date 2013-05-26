@@ -46,7 +46,7 @@ int parse_sentence(Cellule* tab,
     while(sentence[i] != '\0') {
         if(sentence[i] == ' ' || sentence[i] == ',' || sentence[i] == ';' || sentence[i] == '\n'){
             /* the we have to add the current word to the list, and cleanup the current word*/
-            if(strcmp(mot, "") != 0 && strcmp(mot, " ")) {
+            if(strcmp((const char*) mot, "") != 0 && strcmp((const char*) mot, " ")) {
                 add_word(tab, size_of_tab, mot, i + 1, sentence_pos, alphabetical_word_list);
                 mot_index = 0;
                 for(; mot_index<sentence_len; mot_index++)
@@ -66,15 +66,26 @@ int parse_sentence(Cellule* tab,
 /* TODO: Add a check of the present words, and add as a position if word already present. */
 
 int add_word(Cellule* tab, long size_of_tab, unsigned char* word, unsigned short word_len, unsigned long sentence_pos, Liste* alphabetical_word_list) {
-    char* word_to_add = malloc(sizeof(char) * (word_len));
-    strcpy(word_to_add, word);
-    int hash = hache(word_to_add);
+    int hash = hache((char*)word);
     Liste l = &tab[hash % size_of_tab]; /* we get the address of the row we have to write to */
-    Celmot* elem = celmot_new(word_to_add);
-    Liste to_add = liste_new();
-    to_add->valeur = elem;
-    celmot_add_position(elem, sentence_pos);
-    liste_add(&l, to_add);
-    liste_add_alphabetical(alphabetical_word_list, elem);
+    /* we have to add it at the end of the cell list. */
+    int found_word = 0;
+    while(l->suivant != NULL) {
+        l = l->suivant;
+        if(strcmp((const char*)l->valeur->mot, (const char*) word) == 0) {
+            celmot_add_position(l->valeur, sentence_pos);
+            found_word = 1;
+        }
+    }
+    if(!found_word) {
+        char* word_to_add = malloc(sizeof(char) * (word_len));
+        strcpy(word_to_add, word);
+        Celmot* elem = celmot_new(word_to_add);
+        Liste to_add = liste_new();
+        to_add->valeur = elem;
+        celmot_add_position(elem, sentence_pos);
+        liste_add(&l, to_add);
+        liste_add_alphabetical(alphabetical_word_list, elem);
+    }
     return 1;
 }
