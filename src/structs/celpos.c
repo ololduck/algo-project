@@ -27,3 +27,12 @@ int listepos_appartient(Listepos l, int x) {
     }
     return 0;
 }
+
+void listepos_free(Listepos l) {
+    if(l != NULL) {
+        if(l->suivant != NULL)
+            listepos_free(l->suivant);
+        l->suivant = NULL;
+        free(l);
+    }
+}

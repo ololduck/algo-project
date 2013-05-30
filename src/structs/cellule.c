@@ -57,6 +57,19 @@ int liste_add_alphabetical(Liste* l, Celmot* elem) {
     return 1;
 }
 
+void liste_free(Liste l, char options) {
+    if(l != NULL) {
+        if(options & 2)
+            celmot_free(l->valeur, options);
+        if(l->suivant != NULL)
+            liste_free(l->suivant, options);
+        l->valeur = NULL;
+        l->suivant = NULL;
+        free(l);
+    }
+}
+
+
 void liste_print(Liste l) {
     printf("Liste: {\n");
     while(l) {
@@ -67,6 +80,6 @@ void liste_print(Liste l) {
         printf("\t\t}\n\t},\n");
         l = l->suivant;
     }
-    printf("}");
+    printf("}\n");
 }
 

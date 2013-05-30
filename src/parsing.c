@@ -61,16 +61,15 @@ int parse_sentence(Cellule* tab,
             mot[mot_index++] = sentence[i++];
         }
     }
+    free(mot);
     return 1;
 }
-
-/* TODO: Add a check of the present words, and add as a position if word already present. */
 
 int add_word(Cellule* tab, long size_of_tab, unsigned char* word, unsigned short word_len, unsigned long sentence_pos, Liste* alphabetical_word_list) {
     int hash = hache((char*) word);
     Liste l = &tab[hash % size_of_tab]; /* we get the address of the row we have to write to */
-    /* we have to add it at the end of the cell list. */
 
+    /* we have to add it at the end of the cell list. */
     do {
         if(l->valeur != NULL  && strcmp((const char*)l->valeur->mot, (const char*) word) == 0) {
             celmot_add_position(l->valeur, sentence_pos);

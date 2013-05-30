@@ -38,3 +38,15 @@ void celmot_print(Celmot* l) {
     }
     printf("}\n");
 }
+
+void celmot_free(Celmot* c, char options) {
+    if(c != NULL) {
+        if(options & 1)
+            listepos_free(c->positions);
+        if(c->mot != NULL)
+            free(c->mot);
+        c->positions = NULL;
+        c->mot = NULL;
+        free(c);
+    }
+}
