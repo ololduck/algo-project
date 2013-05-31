@@ -96,7 +96,9 @@ void print_alphabetical(Liste l) {
 }
 
 void save_positions_to_file(char* filename, Liste l) {
-    FILE* f = fopen(filename, "w");
+    if(strstr(filename, ".dico") == NULL && strstr(filename, ".DICO") == NULL)
+        strcat(filename, ".DICO");
+    FILE* f = fopen(filename, "w+");
     if(f==NULL) {
         fprintf(stderr, "Error trying to open file %s", filename);
         exit(1);

@@ -1,5 +1,5 @@
 CC=gcc
-CCOPTS=-Wall -ansi
+CCOPTS=-ansi
 
 OUTDIR=./
 OUTBIN=Index
@@ -16,7 +16,7 @@ release: $(SRC)
 	$(CC) $(CCOPTS) -o $(OUT) -O3 $(SRCD)main.c $(SRC)
 
 debug: $(SRC)
-	$(CC) $(CCOPTS) -o $(OUT) -g $(SRCD)main.c $(SRC)
+	$(CC) $(CCOPTS) -Wall -o $(OUT) -g $(SRCD)main.c $(SRC)
 
 tests: $(SRC)
 	for f in `ls tests`; do $(CC) $(CCOPTS) -o $(OUTDIR)tests/$$f -g tests/$$f $(SRC) && ./$(OUTDIR)tests/$$f; done
