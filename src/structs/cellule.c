@@ -49,6 +49,10 @@ int liste_add_alphabetical(Liste* l, Celmot* elem) {
         prec = e;
         e = e->suivant;
     }
+    if(e != NULL && strcmp(e->valeur->mot, elem->mot) == 0) {
+        listepos_add(e->valeur->positions, elem->positions);
+        return 1;
+    }
 
     Liste to_add = liste_new();
     to_add->valeur = elem;

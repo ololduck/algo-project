@@ -5,7 +5,7 @@
 #include "parsing.h"
 #include "wordqueries.h"
 
-#define N 0x8f
+#define N 0xf
 
 
 static void print_tab(Cellule* tab, int tab_len) {
@@ -59,7 +59,9 @@ int main(int argc, char *argv[])
         }
         last_val = val;
         last_optarg = optarg;
+        #ifdef DEBUG
         printf("Option %c with opt %s recieved\n", val, optarg);
+        #endif
         index=-1;
     }
 
@@ -100,6 +102,11 @@ int main(int argc, char *argv[])
         fprintf(stderr, "Error: not enough arguments\n");
         print_help();
     }
+
+
+    #ifdef DEBUG
+    print_tab(tab, N);
+    #endif
 
 
     for(i = 0; i<N; ++i)

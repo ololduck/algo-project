@@ -68,8 +68,10 @@ int parse_sentence(Cellule* tab,
 int add_word(Cellule* tab, long size_of_tab, unsigned char* word, unsigned short word_len, unsigned long sentence_pos, Liste* alphabetical_word_list) {
     int hash = hache((char*) word);
     Liste l = &tab[hash % size_of_tab]; /* we get the address of the row we have to write to */
+    Liste orig = l;
 
     /* we have to add it at the end of the cell list. */
+    /*
     do {
         if(l->valeur != NULL  && strcmp((const char*)l->valeur->mot, (const char*) word) == 0) {
             celmot_add_position(l->valeur, sentence_pos);
@@ -83,14 +85,15 @@ int add_word(Cellule* tab, long size_of_tab, unsigned char* word, unsigned short
     if(l->valeur == NULL)
         to_add = l;
     else
-        to_add = liste_new();
+        to_add = liste_new(); */
     char* word_to_add = malloc(sizeof(char) * (word_len));
     strcpy(word_to_add, word);
     Celmot* elem = celmot_new(word_to_add);
-    to_add->valeur = elem;
     celmot_add_position(elem, sentence_pos);
-    if(l != to_add)
-        liste_add(&l, to_add);
+    /* to_add->valeur = elem; */
+    /* if(l != to_add) */
+    liste_add_alphabetical(&orig, elem);
+    /*     liste_add(&l, to_add); */
     liste_add_alphabetical(alphabetical_word_list, elem);
     return 1;
 }

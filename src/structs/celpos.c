@@ -13,7 +13,9 @@ Listepos listepos_new(int pos) {
 
 
 void listepos_add(Listepos l, Listepos elem) {
-    while(l)
+    if(!l)
+        return;
+    while(l->suivant)
         l = l->suivant;
     l->suivant = elem;
 }
