@@ -3,6 +3,7 @@
 #include <string.h>
 
 #include "wordqueries.h"
+#include "hachage.h"
 
 static Liste get(char* word, Liste l) {
     while(l != NULL) {

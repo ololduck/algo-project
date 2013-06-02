@@ -5,7 +5,9 @@
 #include "parsing.h"
 #include "wordqueries.h"
 
-#define N 0xf
+#define N 0x8f
+
+static const char* version = "1.0.3";
 
 
 static void print_tab(Cellule* tab, int tab_len) {
@@ -15,8 +17,92 @@ static void print_tab(Cellule* tab, int tab_len) {
     }
 }
 
+static void interactive_menu(Cellule* tab, int tab_len, Liste* alphab) {
+    /* TODO */
+    char choice = 0;
+    char fname[256];
+    char mot[32];
+    printf("Index v%s - Menu interactif\n\n", version);
+    printf("Entrez le nom du fichier à analyser: ");
+    scanf("%s", fname);
+    getchar(); /* removes the \n */
+    FILE* tmp;
+    if((tmp = fopen(fname, "r")) == NULL) {
+        fprintf(stderr, "Error: file %s cannot be found.", fname);
+        exit(1);
+    }
+    fclose(tmp);
+
+    parse_file(tab, tab_len, fname, alphab);
+    while(choice != 'q' && choice != EOF) {
+        printf("Choix\n"
+            "\n"
+            "a - teste l'appartenance d'un mot au fichier\n"
+            "p - affiche les positions de mot dans le fichier\n"
+            "P - affiche les phrases contenant mot dans le fichier\n"
+            "l - affiche l'intégralité ddes mots (triés) présents dans le texte\n"
+            "d - affiche l'ensemble des mots du texte ayant pour préfixe mot\n"
+            "D - sauvegarde dans un fichier la liste des mots, avec leurs positions\n"
+            "q ou ctrl+d - quitter\n"
+            "\n"
+            "Que voulez vous faire?\n"
+            );
+        choice = getchar();
+        if(choice != EOF)
+            getchar(); /* removes the \n */
+        #ifdef DEBUG
+        printf("Choice: %c (%d)", choice, choice);
+        #endif
+        if(choice == 'a'){
+            printf("Entrez le mot à rechercher: ");
+            scanf("%s", mot);
+            getchar(); /* removes the \n */
+            if(belongs(mot, tab, tab_len)) {
+                printf("%s appartient à %s\n", mot, fname);
+            }
+            else
+                printf("%s n'appartient pas à %s\n", mot, fname);
+        }
+        else if(choice == 'p') {
+            printf("Entrez le mot à rechercher: ");
+            scanf("%s", mot);
+            getchar(); /* removes the \n */
+            print_positions(mot, tab, tab_len);
+        }
+        else if(choice == 'P') {
+            printf("Entrez le mot à rechercher: ");
+            scanf("%s", mot);
+            getchar(); /* removes the \n */
+            print_sentences_containing_word(mot, fname, tab, tab_len);
+        }
+        else if(choice == 'l') {
+            print_alphabetical(*alphab);
+        }
+        else if(choice =='d') {
+            printf("Entrez le mot à rechercher: ");
+            scanf("%s", mot);
+            getchar(); /* removes the \n */
+            print_all_from_prefix(mot, *alphab);
+        }
+        else if(choice == 'D') {
+            char fsave[256];
+            printf("Entrez le nom de fichier dans lequel sauvegarder: ");
+            scanf("%s", fsave);
+            getchar(); /* removes the \n */
+            save_positions_to_file(fsave, *alphab);
+        }
+        else if(choice == 'q' || choice == EOF) {
+            printf("Quit.\n");
+        }
+        else
+            printf("Not a valid choice: %c\n", choice);
+
+    }
+
+}
+
 static void print_help() {
-    printf("Index v1.0.1\n"
+    printf("Index v%s\n"
 "Usage: Index [-h] [-apPldD] FILE\n"
 "\t-a\t--appartient\tMOT\t Teste la présence de MOT dans FILE\n"
 "\t-p\t--positions\tMOT\tAffiche les positions de MOT, si présent dans FILE\n"
@@ -24,7 +110,7 @@ static void print_help() {
 "\t-l\t--liste\tAffiche la liste des mots présents FILE, alphabetiquement\n"
 "\t-d\t--prefixe\tPREFIX\tAffiche la liste des mots présents dans FILE dont PREFIXE est le prefixe.\n"
 "\t-D\t--tofile\tOUTFILE\tSauvegarde la liste des mots dans OUTFILE.DICO\n"
-"\n");
+"\n", version);
 }
 
 
@@ -72,6 +158,10 @@ int main(int argc, char *argv[])
         tab[i].suivant = NULL;
     }
     Liste alphab = NULL;
+    if(argc == 1) {
+        interactive_menu(tab, N, &alphab);
+        exit(0);
+    }
 
     if(optind < argc) {
         parse_file(tab, N, argv[optind], &alphab);
