@@ -7,7 +7,7 @@
 
 #define N 0x8f
 
-static const char* version = "1.0.3";
+static const char* version = "1.0.4";
 
 
 static void print_tab(Cellule* tab, int tab_len) {
@@ -24,7 +24,10 @@ static void interactive_menu(Cellule* tab, int tab_len, Liste* alphab) {
     char mot[32];
     printf("Index v%s - Menu interactif\n\n", version);
     printf("Entrez le nom du fichier à analyser: ");
-    scanf("%s", fname);
+    if(scanf("%s", fname) != 1) {
+        fprintf(stderr, "Error while reading input\n");
+        exit(1);
+    }
     getchar(); /* removes the \n */
     FILE* tmp;
     if((tmp = fopen(fname, "r")) == NULL) {
@@ -55,7 +58,10 @@ static void interactive_menu(Cellule* tab, int tab_len, Liste* alphab) {
         #endif
         if(choice == 'a'){
             printf("Entrez le mot à rechercher: ");
-            scanf("%s", mot);
+            if(scanf("%s", mot) != 1) {
+                fprintf(stderr, "Error while reading input\n");
+                exit(1);
+            }
             getchar(); /* removes the \n */
             if(belongs(mot, tab, tab_len)) {
                 printf("%s appartient à %s\n", mot, fname);
@@ -65,13 +71,19 @@ static void interactive_menu(Cellule* tab, int tab_len, Liste* alphab) {
         }
         else if(choice == 'p') {
             printf("Entrez le mot à rechercher: ");
-            scanf("%s", mot);
+            if(scanf("%s", mot) != 1) {
+                fprintf(stderr, "Error while reading input\n");
+                exit(1);
+            }
             getchar(); /* removes the \n */
             print_positions(mot, tab, tab_len);
         }
         else if(choice == 'P') {
             printf("Entrez le mot à rechercher: ");
-            scanf("%s", mot);
+            if(scanf("%s", mot) != 1) {
+                fprintf(stderr, "Error while reading input\n");
+                exit(1);
+            }
             getchar(); /* removes the \n */
             print_sentences_containing_word(mot, fname, tab, tab_len);
         }
@@ -80,14 +92,20 @@ static void interactive_menu(Cellule* tab, int tab_len, Liste* alphab) {
         }
         else if(choice =='d') {
             printf("Entrez le mot à rechercher: ");
-            scanf("%s", mot);
+            if(scanf("%s", mot) != 1) {
+                fprintf(stderr, "Error while reading input\n");
+                exit(1);
+            }
             getchar(); /* removes the \n */
             print_all_from_prefix(mot, *alphab);
         }
         else if(choice == 'D') {
             char fsave[256];
             printf("Entrez le nom de fichier dans lequel sauvegarder: ");
-            scanf("%s", fsave);
+            if(scanf("%s", fname) != 1) {
+                fprintf(stderr, "Error while reading input\n");
+                exit(1);
+            }
             getchar(); /* removes the \n */
             save_positions_to_file(fsave, *alphab);
         }
