@@ -17,8 +17,14 @@ static void print_tab(Cellule* tab, int tab_len) {
     }
 }
 
+
+/**
+ * This is the interactive menu. It is launched if the number of given args is == 1.
+ * @param tab     the array containing the parsed data.
+ * @param tab_len the length of the array
+ * @param alphab  the pointer to the Liste which will contain the alphabetically-sorted data
+ */
 static void interactive_menu(Cellule* tab, int tab_len, Liste* alphab) {
-    /* TODO */
     char choice = 0;
     char fname[256];
     char mot[32];
