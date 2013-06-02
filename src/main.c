@@ -7,7 +7,7 @@
 
 #define N 0x8f
 
-static const char* version = "1.0.4";
+static const char* version = "1.1.0";
 
 
 static void print_tab(Cellule* tab, int tab_len) {
